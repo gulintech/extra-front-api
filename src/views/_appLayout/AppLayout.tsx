@@ -13,7 +13,7 @@ const drawerWidth = 300;
 
 export function AppLayout() {
   const [isMobile, setIsMobile] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   const handleDrawerToggle = () => {
     setIsMobile(!isMobile);
