@@ -1,10 +1,18 @@
-import MenuIcon from "@mui/icons-material/Menu";
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-export function Topbar(props: {
-  drawerWidth: number;
-  onMenuToggle: () => void;
-}) {
+import MenuIcon from "@mui/icons-material/Menu";
+import { AppBar, Breadcrumbs, IconButton, Toolbar, Typography } from "@mui/material";
+
+export function Topbar(props: { drawerWidth: number; onMenuToggle: () => void }) {
+  let location = useLocation();
+  const [currentPageName, setCurrentPageName] = useState<string>("");
+
+  useEffect(() => {
+    const newLoc = location.pathname.replaceAll("/", "").replaceAll("_", " ");
+    setCurrentPageName(newLoc[0].toUpperCase() + newLoc.substring(1));
+  }, [location]);
+
   return (
     <AppBar
       position="fixed"
@@ -24,7 +32,14 @@ export function Topbar(props: {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          Responsive drawer
+          <Breadcrumbs>
+            <Typography color="text.primary" sx={{ fontVariant: "small-caps" }}>
+              App
+            </Typography>
+            <Typography color="text.primary" sx={{ fontVariant: "small-caps" }}>
+              {currentPageName}
+            </Typography>
+          </Breadcrumbs>
         </Typography>
       </Toolbar>
     </AppBar>

@@ -55,7 +55,7 @@ function MenuLinks() {
       </List>
       <Divider />
       <List>
-        <CustomLink to="userSettings" text="User settings" icon={<SettingsIcon />} />
+        <CustomLink to="user_settings" text="User settings" icon={<SettingsIcon />} />
       </List>
     </div>
   );
