@@ -1,5 +1,11 @@
+import { Button } from "@mui/material";
+
 function App() {
-  return <> Hello world</>;
+  return (
+    <>
+      <Button variant="contained">Hello world!</Button>
+    </>
+  );
 }
 
 export default App;
