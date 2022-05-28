@@ -1,17 +1,9 @@
-import MailIcon from "@mui/icons-material/Mail";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import { NavLink } from "react-router-dom";
+
+import AllInboxIcon from "@mui/icons-material/AllInbox";
 import SettingsIcon from "@mui/icons-material/Settings";
-import {
-  Box,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-} from "@mui/material";
+import TableRowsIcon from "@mui/icons-material/TableRows";
+import { Box, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar } from "@mui/material";
 
 export function SideMenu(props: { drawerWidth: number; isMobile: boolean; onMenuToggle: () => void }) {
   return (
@@ -58,26 +50,28 @@ function MenuLinks() {
       <Toolbar>GulinTech</Toolbar>
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <CustomLink to="portfolio" text="Portfolio" icon={<AllInboxIcon />} />
+        <CustomLink to="logs" text="Logs" icon={<TableRowsIcon />} />
       </List>
       <Divider />
       <List>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary={"User settings"} />
-          </ListItemButton>
-        </ListItem>
+        <CustomLink to="userSettings" text="User settings" icon={<SettingsIcon />} />
       </List>
     </div>
+  );
+}
+
+function CustomLink(props: { to: string; text: string; icon: any }) {
+  return (
+    <NavLink to={props.to}>
+      {({ isActive }) => (
+        <ListItemButton selected={isActive}>
+          <ListItemIcon>
+            <>{props.icon}</>
+          </ListItemIcon>
+          <ListItemText primary={props.text} />
+        </ListItemButton>
+      )}
+    </NavLink>
   );
 }
