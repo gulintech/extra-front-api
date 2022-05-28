@@ -10,7 +10,9 @@ export function Topbar(props: { drawerWidth: number; onMenuToggle: () => void })
 
   useEffect(() => {
     const newLoc = location.pathname.replaceAll("/", "").replaceAll("_", " ");
-    setCurrentPageName(newLoc[0].toUpperCase() + newLoc.substring(1));
+    if (newLoc) {
+      setCurrentPageName(newLoc[0].toUpperCase() + newLoc.substring(1));
+    }
   }, [location]);
 
   return (
