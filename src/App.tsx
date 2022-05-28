@@ -1,12 +1,15 @@
 import "@aws-amplify/ui-react/styles.css";
 
 import { Authenticator } from "@aws-amplify/ui-react";
-import { Button } from "@mui/material";
+
+import { Main } from "./views/main";
 
 function App() {
   return (
-    <Authenticator>
-      <Button variant="contained">Hello world!</Button>
+    <Authenticator hideSignUp={true}>
+      <Authenticator.Provider>
+        <Main />
+      </Authenticator.Provider>
     </Authenticator>
   );
 }
