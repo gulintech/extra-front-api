@@ -1,11 +1,10 @@
-import { randomUUID } from "crypto";
 import { NTable } from "../../components/nTable/NTable";
 import { useGetData } from "../../shared/useGetData";
 import { ILog, ILogsResponse, LogColumns, LogsQuery } from "./logs.entity";
 
 export function Logs() {
-  const dataState = useGetData<ILogsResponse>(LogsQuery);
-  // const dataState = getFakedLogs();
+  // const dataState = useGetData<ILogsResponse>(LogsQuery);
+  const dataState = getFakedLogs();
   return (
     <NTable
       title="List of logs"
