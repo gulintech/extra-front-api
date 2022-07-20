@@ -1,0 +1,510 @@
+input AddClientInput {
+    status: String
+    secretArn: String
+}
+
+input AddExchangeInput {
+    clientId: ID
+    id: String
+    kind: ExchangeEnum
+    publicKey: String
+    secretKey: String
+    lastTransferMoment: AWSTimestamp
+    totalTransferredUSDT: Float
+    totalInitialMargin: Float
+    totalMaintMargin: Float
+    totalWalletBalance: Float
+    totalUnrealizedProfit: Float
+    totalMarginBalance: Float
+    totalPositionInitialMargin: Float
+    totalOpenOrderInitialMargin: Float
+    totalCrossWalletBalance: Float
+    totalCrossUnPnl: Float
+    availableBalance: Float
+    maxWithdrawAmount: Float
+}
+
+input AddNewLogInput {
+    clientId: ID
+    timestamp: String
+    src: String
+    srcId: String
+    info: String
+}
+
+input AddNewOrderInput {
+    portfolioId: ID!
+    id: ID!
+    orderId: String
+    dir: String
+    price: Float
+    qty: Float
+    volume: Float
+    kind: OrderKind
+    type: String
+    fulfilled: Float
+    qtyChange: Float
+    linked: String
+    trdPair: String
+    trdAmount: Float
+}
+
+input AddNewTradeInput {
+    portfolioId: ID!
+    id: String
+    orderId: String!
+    price: Float
+    qty: Float
+    time: AWSTimestamp
+    dir: String
+    trdPair: String
+}
+
+input AddOrderStateInput {
+    portfolioId: ID!
+    time: String!
+    id: ID!
+    orderId: String
+    dir: String
+    price: Float
+    qty: Float
+    volume: Float
+    kind: OrderKind
+    type: String
+    fulfilled: Float
+    qtyChange: Float
+    linked: String
+    status: String
+}
+
+enum CRUD {
+    create
+    delete
+    update
+}
+
+type Client @aws_cognito_user_pools
+@aws_api_key {
+    id: ID!
+    status: String
+    secretArn: String
+    exchanges: [Exchange]
+    portfolios: [Portfolio]
+    logs: [Log]
+}
+
+input DeleteExchangeInput {
+    id: ID!
+}
+
+input DeleteOrderInput {
+    portfolioId: ID!
+    id: ID!
+}
+
+input DeletePortfolioInput {
+    id: ID!
+}
+
+input DeleteStrategyLevelInput {
+    strategyId: ID
+    id: ID
+}
+
+type Exchange @aws_cognito_user_pools
+@aws_api_key {
+    clientId: ID
+    id: String!
+    kind: ExchangeEnum!
+    publicKey: String
+    lastTransferMoment: AWSTimestamp
+    totalTransferredUSDT: Float
+    totalInitialMargin: Float
+    totalMaintMargin: Float
+    totalWalletBalance: Float
+    totalUnrealizedProfit: Float
+    totalMarginBalance: Float
+    totalPositionInitialMargin: Float
+    totalOpenOrderInitialMargin: Float
+    totalCrossWalletBalance: Float
+    totalCrossUnPnl: Float
+    availableBalance: Float
+    maxWithdrawAmount: Float
+}
+
+type ExchangeChangedPayload {
+    operation: CRUD
+    ownerId: ID!
+    exchange: Exchange
+}
+
+enum ExchangeEnum {
+    binance_usdfut
+    mock
+}
+
+input GetExchangeInput {
+    clientId: ID!
+    id: String
+}
+
+input GetInitialVolumeInput {
+    exchange: String
+    pair: String
+    volume: Float
+    quote: String
+}
+
+input GetPortfolioInput {
+    clientId: ID!
+    portfolioId: ID
+}
+
+input GetStrategyLevelInput {
+    strategyId: ID!
+    id: ID
+}
+
+type Log @aws_cognito_user_pools
+@aws_api_key {
+    clientId: ID
+    timestamp: String
+    src: String
+    srcId: String
+    info: String
+}
+
+type LogChangedPayload {
+    operation: CRUD
+    ownerId: ID!
+    log: Log
+}
+
+type Mutation {
+    addStrategyLevel(input: UpdateStrategyLevelInput!): StrategyLevel
+    @aws_cognito_user_pools
+    @aws_api_key
+    updateStrategyLevel(input: UpdateStrategyLevelInput!): StrategyLevel
+    @aws_cognito_user_pools
+    @aws_api_key
+    deleteStrategyLevel(input: DeleteStrategyLevelInput!): StrategyLevel
+    @aws_cognito_user_pools
+    @aws_api_key
+    addPortoflio(input: UpdatePortfolioInput!): Portfolio
+    @aws_cognito_user_pools
+    @aws_api_key
+    addClient(input: AddClientInput!): ID!
+    @aws_cognito_user_pools
+    @aws_api_key
+    addNewOrder(input: AddNewOrderInput!): Order
+    @aws_cognito_user_pools
+    @aws_api_key
+    addNewLog(input: AddNewLogInput!): Log
+    @aws_cognito_user_pools
+    @aws_api_key
+    updateOrder(input: UpdateOrderInput!): Order
+    @aws_cognito_user_pools
+    @aws_api_key
+    updatePortoflio(input: UpdatePortfolioInput!): Portfolio
+    @aws_cognito_user_pools
+    @aws_api_key
+    deleteOrder(input: DeleteOrderInput!): Order
+    @aws_cognito_user_pools
+    @aws_api_key
+    addNewTrade(input: AddNewTradeInput): Trade
+    @aws_cognito_user_pools
+    @aws_api_key
+    addOrderState(input: AddOrderStateInput): Order
+    @aws_cognito_user_pools
+    @aws_api_key
+    addExchange(input: AddExchangeInput!): Exchange
+    @aws_cognito_user_pools
+    @aws_api_key
+    updateOrderBook(input: [OrderBookInput]): [OrderBook]
+    @aws_cognito_user_pools
+    @aws_api_key
+    deletePortfolio(input: DeletePortfolioInput!): Portfolio
+    @aws_cognito_user_pools
+    @aws_api_key
+    deleteExchange(input: DeleteExchangeInput!): Exchange
+    @aws_cognito_user_pools
+    @aws_api_key
+    updateClient(input: UpdateClientInput!): Client
+    @aws_cognito_user_pools
+    @aws_api_key
+    portfolioChanged(ownerId: ID!, operation: CRUD, portfolio: UpdatePortfolioInput): PortfolioChangedPayload
+    @aws_cognito_user_pools
+    @aws_api_key
+    orderChanged(ownerId: ID!, operation: CRUD, order: AddNewOrderInput): OrderChangedPayload
+    @aws_cognito_user_pools
+    @aws_api_key
+    tradeChanged(ownerId: ID!, operation: CRUD, trade: AddNewTradeInput): TradeChangedPayload
+    @aws_cognito_user_pools
+    @aws_api_key
+    logChanged(ownerId: ID!, operation: CRUD, log: AddNewLogInput): LogChangedPayload
+    @aws_cognito_user_pools
+    @aws_api_key
+    exchangeChanged(ownerId: ID!, operation: CRUD, exchange: AddExchangeInput): ExchangeChangedPayload
+    @aws_cognito_user_pools
+    @aws_api_key
+    updateExchange(input: AddExchangeInput!): Exchange
+    @aws_cognito_user_pools
+    @aws_api_key
+}
+
+type Order @aws_cognito_user_pools
+@aws_api_key {
+    id: ID!
+    orderId: String
+    time: String
+    status: String
+    dir: String
+    price: Float
+    qty: Float
+    volume: Float
+    kind: OrderKind
+    type: String
+    fulfilled: Float
+    qtyChange: Float
+    linked: String
+    trdPair: String
+    trdAmount: Float
+}
+
+type OrderBook @aws_cognito_user_pools
+@aws_api_key {
+    exchange: String
+    pair: String
+    quote: String
+    base: String
+    bidQty: Float
+    bidPrice: Float
+    askQty: Float
+    askPrice: Float
+}
+
+input OrderBookInput {
+    exchange: String
+    pair: String
+    quote: String
+    base: String
+    bidQty: Float
+    bidPrice: Float
+    askQty: Float
+    askPrice: Float
+}
+
+type OrderChangedPayload {
+    operation: CRUD
+    ownerId: ID!
+    order: Order
+}
+
+enum OrderKind {
+    master
+    slave
+    initial
+}
+
+type Portfolio @aws_cognito_user_pools
+@aws_api_key {
+    id: ID!
+    trdPair: String
+    exchange: Exchange
+    name: String
+    status: String
+    buy: Boolean
+    sell: Boolean
+    onlyClose: Boolean
+    cooldown: Int
+    initialVolume: Float
+    initialVolumeEUR: Float
+    fixedVolume: Float
+    fixedAmount: Float
+    initialPrice: Float
+    positionControl: String
+    amount: Float
+    volume: Float
+    level: Int
+    takeProfit: Float
+    priceShift: Float
+    martingale: Float
+    limit: Int
+    lastTradeMoment: AWSTimestamp
+    orders: [Order]
+    trades: [Trade]
+    bid: Float
+    ask: Float
+    strategy: Strategy
+}
+
+type PortfolioChangedPayload {
+    operation: CRUD
+    ownerId: ID!
+    portfolio: Portfolio
+}
+
+type Query {
+    getClientData(input: ID): Client
+    @aws_cognito_user_pools
+    @aws_api_key
+    getExchanges(input: GetExchangeInput!): [Exchange]
+    @aws_cognito_user_pools
+    @aws_api_key
+    getPortfolios(input: GetPortfolioInput!): [Portfolio]
+    @aws_cognito_user_pools
+    @aws_api_key
+    getInitialVolume(input: GetInitialVolumeInput!): Float
+    @aws_cognito_user_pools
+    @aws_api_key
+    getStrategyLevels(input: GetStrategyLevelInput!): [StrategyLevel]
+    @aws_cognito_user_pools
+    @aws_api_key
+    getSymbolInfo(input: SymbolInfoInput!): SymbolInfo
+    @aws_cognito_user_pools
+    @aws_api_key
+}
+
+type Strategy @aws_cognito_user_pools
+@aws_api_key {
+    id: ID
+    levels: [StrategyLevel]
+}
+
+type StrategyLevel @aws_cognito_user_pools
+@aws_api_key {
+    strategyId: ID
+    id: ID
+    level: Int
+    takeProfit: Float
+    priceShift: Float
+    martingale: Float
+}
+
+type Subscription {
+    onExchangeChange(ownerId: ID!): ExchangeChangedPayload
+    @aws_subscribe(mutations: ["exchangeChanged"])
+    @aws_cognito_user_pools
+    @aws_api_key
+    onOrderChange(ownerId: ID!): OrderChangedPayload
+    @aws_subscribe(mutations: ["orderChanged"])
+    @aws_cognito_user_pools
+    @aws_api_key
+    onTradeChange(ownerId: ID!): TradeChangedPayload
+    @aws_subscribe(mutations: ["tradeChanged"])
+    @aws_cognito_user_pools
+    @aws_api_key
+    onLogAdded(ownerId: ID!): LogChangedPayload
+    @aws_subscribe(mutations: ["logChanged"])
+    @aws_cognito_user_pools
+    @aws_api_key
+    onPortfolioChange(ownerId: ID!): PortfolioChangedPayload
+    @aws_subscribe(mutations: ["portfolioChanged"])
+    @aws_cognito_user_pools
+    @aws_api_key
+}
+
+type SymbolInfo @aws_cognito_user_pools
+@aws_api_key {
+    exchange: String
+    pair: String
+    deliveryDate: AWSTimestamp
+    askPrice: Float
+    bidPrice: Float
+    minNotional: Float
+    priceTickSize: Float
+    base: String
+    quote: String
+    quantityMinSize: Float
+    contractType: String
+    quoteVolume: Float
+    minQuoteVolume: Float
+}
+
+input SymbolInfoInput {
+    exchange: String
+    pair: String
+    volume: Float
+    quote: String
+}
+
+type Trade @aws_cognito_user_pools
+@aws_api_key {
+    orderId: String!
+    id: String
+    price: Float
+    qty: Float
+    time: AWSTimestamp
+    dir: String
+    trdPair: String
+}
+
+type TradeChangedPayload {
+    operation: CRUD
+    ownerId: ID!
+    trade: Trade
+}
+
+input UpdateClientInput {
+    id: ID
+    status: String
+}
+
+input UpdateMarketPricesInput {
+    exchange: String
+    orderBook: [OrderBookInput]
+}
+
+input UpdateOrderInput {
+    portfolioId: ID!
+    id: ID!
+    fulfilled: Float
+    qtyChange: Float
+    linked: String
+    price: Float
+}
+
+input UpdatePortfolioInput {
+    clientId: ID
+    id: ID!
+    name: String
+    trdPair: String
+    exchange: String
+    status: String
+    buy: Boolean
+    sell: Boolean
+    onlyClose: Boolean
+    cooldown: Int
+    amount: Float
+    volume: Float
+    level: Int
+    takeProfit: Float
+    priceShift: Float
+    martingale: Float
+    limit: Int
+    positionControl: String
+    initialVolume: Float
+    initialVolumeEUR: Float
+    fixedVolume: Float
+    fixedAmount: Float
+    lastTradeMoment: AWSTimestamp
+    bid: Float
+    ask: Float
+    initialPrice: Float
+    strategy: String
+}
+
+input UpdateStrategyLevelInput {
+    strategyId: ID
+    id: ID
+    level: Int
+    takeProfit: Float
+    priceShift: Float
+    martingale: Float
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
